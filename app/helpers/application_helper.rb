@@ -1,8 +1,9 @@
 module ApplicationHelper
-
+  include ConfigFile
   def self.create_jwt_token profile
-    profile_info  = { :id => profile.id , :email=> profile.email, :expiry=>Time.now + 50.days }
-    token = JWT.encode profile_info,ConfigFile::SECRET_KEY,ConfigFile::HASH
+    # binding.pry
+    profile_info  = { :id => profile.id , :email=> profile.email, :full_name=> profile.full_name }
+    token = JWT.encode profile_info, ConfigFile::SECRET_KEY, ConfigFile::HASH
     profile.jwt_token = token
     profile.save
   end

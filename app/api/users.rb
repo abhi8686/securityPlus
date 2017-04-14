@@ -12,14 +12,15 @@ class Users < Grape::API
   end
 
   put 'register' do
+    # binding.pry
     user =  User.new(email: params[:email],
                          password: params[:password],
-                         full_name: parmas[:full_name]
+                         full_name: params[:full_name]
                          )
 
     if user.valid?
        user.save
-       GlobalKey.new(public_key: params[:public_key] , user_id: user.id)
+       GlobalKey.create(public_key: params[:public_key] , user_id: user.id)
       { message: "registered user" }
     else
       error_builder user.errors.full_messages,500
@@ -34,11 +35,10 @@ class Users < Grape::API
 
   post 'login' do
     user = User.where(email: params[:email]).first
-    if user && user.authenticate(params[:password])
+    if  user.valid_password?(params[:password])
       ApplicationHelper::create_jwt_token(user)
-      user.update_attribute(:online, true)
-      user.update_attribute(:jwt_token,user.jwt_token)
-      { :key => user.jwt_token,:user_details => user.transform , notifications: user.get_notifications, preferences: user.preferences.inject({}) { |hash,pref| hash.merge ( pref.transform ) } }
+      user.update_attribute(:jwt_token, user.jwt_token)
+      { :key => user.jwt_token }
     else
       error_builder 'Please enter valid credentials', 500
     end
@@ -71,13 +71,16 @@ class Users < Grape::API
   end
   post "/user_profile" do 
     user = User.find(params[:user_id])
-    {message: "found user", user: user, public_key: user.global_key.public_key}
+    {message: "found user", user: user, public_key: user.global_key}
   end
 
   desc "get all registered_users"
-  get "/users/all" do 
+  get "/all" do 
+    # user = logged_in user
     users = User.all
-    {message: "nil", users: users}
+    data = {}
+    users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name, public_key: x.global_key}}
+    {message: "list of all users", users: data}
   end
 
   desc "create message"
@@ -85,6 +88,7 @@ class Users < Grape::API
     requires :user_id, allow_blank: :false, type:String
     requires :content, allow_blank: :false, type: String
   end
+
   post "/message/new" do 
     user  = logged_in user
     a = Conversation.where(user_1: user.id, user_2: params[:user_id]).first
