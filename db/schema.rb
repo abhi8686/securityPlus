@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20170414121333) do
     t.integer  "conversation_id"
     t.string   "content"
     t.string   "sender_id"
+    t.string   "recevier_id"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
