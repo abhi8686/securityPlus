@@ -61,9 +61,9 @@ class Users < Grape::API
   get "/messages/check" do 
     user = logged_in User
     messages = Message.where(recevier_id: user.id).group_by(&:conversation_id)
+    messages.destroy_all
     { messages: messages, message: "add"}
   end
-
 
   desc "start conversation"
   params do 
@@ -72,5 +72,30 @@ class Users < Grape::API
   post "/user_profile" do 
     user = User.find(params[:user_id])
     {message: "found user", user: user, public_key: user.global_key.public_key}
+  end
+
+  desc "get all registered_users"
+  get "/users/all" do 
+    users = User.all
+    {message: "nil", users: users}
+  end
+
+  desc "create message"
+  params do 
+    requires :user_id, allow_blank: :false, type:String
+    requires :content, allow_blank: :false, type: String
+  end
+  post "/message/new" do 
+    user  = logged_in user
+    a = Conversation.where(user_1: user.id, user_2: params[:user_id]).first
+
+    b = Conversation.where(user_2: user.id, user_1: params[:user_id]).first
+    if a
+      c = a
+    else
+      c =b
+    end
+    Message.create(sender_id: user.id, recevier_id: params[:user_id], content: params[:content], conversation_id: c.id)
+    {message: "message created"}
   end
 end
