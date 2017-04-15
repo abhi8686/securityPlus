@@ -79,7 +79,7 @@ class Users < Grape::API
     elsif b
       c =b
     else
-      
+
     end
     if c 
       if c.user_1 == user1.id
@@ -90,7 +90,7 @@ class Users < Grape::API
     else
       d = user1.global_key.public_key
     end
-    {message: "found user", user: user, public_key: d }
+    {message: "found user", user: user1, public_key: d }
   end
 
   desc "get all registered_users"
