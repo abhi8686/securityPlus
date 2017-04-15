@@ -1063,3 +1063,6 @@ Completed 200 OK in 5ms (Views: 3.5ms | ActiveRecord: 0.0ms)
 
 
 Started GET "/api/user/all" for 127.0.0.1 at 2017-04-15 18:41:44 +0530
+
+
+Started GET "/api/user/all" for 127.0.0.1 at 2017-04-15 18:57:42 +0530
