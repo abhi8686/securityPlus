@@ -12,7 +12,6 @@ class Users < Grape::API
   end
 
   put 'register' do
-    # binding.pry
     user =  User.new(email: params[:email],
                          password: params[:password],
                          full_name: params[:full_name]
@@ -46,13 +45,43 @@ class Users < Grape::API
 
 
   desc "User Logout"
-
   post "logout" do
     user = logged_in User
     user.update_attribute(:jwt_token,nil)
     user.update_attribute(:device_token,nil)
     user.update_attribute(:online, false)
     { message: "Successfully Logged Out "}
+  end
+
+
+  desc "user update private key for conversation"
+  params do 
+    requires :user_id, allow_blank: :false, type:String
+    requires :public_key, allow_blank: :false, type: String
+  end
+  post "public_key" do
+    user1 = User.find(params[:user_id])
+    user2 = logged_in User
+    a = Conversation.where(user_1: user1.id, user_2: user2.id).first
+    b = Conversation.where(user_2: user1.id, user_1: user2.id).first
+    if a
+      c = a
+    elsif b
+      c =b
+    else
+    end
+    if c 
+      if c.user_1 == user1.id
+        c.user_1_public = params[:public_key]
+        c.save
+      else
+        c.user_2_public = params[:public_key]
+        c.save
+      end
+    else
+      c = Conversation.create(user_1: user1.id, user_2: user2.id, user_2_public: params[:public_key], user_1_public: user1.global_key.public_key)
+    end
+    {messages: "updated conversation" }
   end
 
 
