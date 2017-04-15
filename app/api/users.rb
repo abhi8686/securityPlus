@@ -60,7 +60,7 @@ class Users < Grape::API
 
   get "/messages/check" do 
     user = logged_in User
-    messages = Message.where(recevier_id: user.id).group_by(&:conversation_id)
+    messages = Message.where(recevier_id: user.id)
     messages.destroy_all
     { messages: messages, message: "add"}
   end
@@ -70,8 +70,17 @@ class Users < Grape::API
     requires :user_id, allow_blank: :false, type:String
   end
   post "/user_profile" do 
-    user = User.find(params[:user_id])
-    {message: "found user", user: user, public_key: user.global_key}
+    user1 = User.find(params[:user_id])
+    user2 = logged_in User
+    a = Conversation.where(user_1: user1.id, user_2: user2.id).first
+
+    b = Conversation.where(user_2: user1.id, user_1: user2.id).first
+    if a
+      c = a
+    else
+      c =b
+    end
+    {message: "found user", user: user, public_key: c }
   end
 
   desc "get all registered_users"
@@ -79,7 +88,7 @@ class Users < Grape::API
     # user = logged_in user
     users = User.all
     data = {}
-    users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name, public_key: x.global_key}}
+    users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name}}
     {message: "list of all users", users: data}
   end
 
