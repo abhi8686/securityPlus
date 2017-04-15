@@ -86,11 +86,11 @@ class Users < Grape::API
     {messages: "updated conversation"}
   end
 
-
   desc "user messages"
   get "/messages/check" do 
     user = logged_in User
     messages = Message.where(recevier_id: user.id)
+    Message.where(recevier_id: user.id).destroy_all
     { messages: messages}
   end
 
