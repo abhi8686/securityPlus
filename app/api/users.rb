@@ -94,8 +94,8 @@ class Users < Grape::API
 
   desc "get all registered_users"
   get "/all" do 
-    # user = logged_in user
-    users = User.where.not(id: current_user.id)
+    user = logged_in user
+    users = User.where.not(id: user.id)
     data = {}
     users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name}}
     {message: "list of all users", users: data}
@@ -120,4 +120,11 @@ class Users < Grape::API
     Message.create(sender_id: user.id, recevier_id: params[:user_id], content: params[:content], conversation_id: c.id)
     {message: "message created"}
   end
+
+
+
+  get "/all1" do 
+    binding.pry
+  end
+
 end
