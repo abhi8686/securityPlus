@@ -89,8 +89,8 @@ class Users < Grape::API
   desc "user messages"
   get "/messages/check" do 
     user = logged_in User
-    messages = Message.where(recevier_id: user.id)
-    Message.where(recevier_id: user.id).destroy_all
+    messages = Message.where(recevier_id: user.id, seen: false)
+    messages.map{|x| x.seen = true; x.save}
     { messages: messages}
   end
 
