@@ -94,7 +94,7 @@ class Users < Grape::API
 
   desc "get all registered_users"
   get "/all" do 
-    user = logged_in user
+    user = logged_in User
     users = User.where.not(id: user.id)
     data = {}
     users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name}}
@@ -108,7 +108,7 @@ class Users < Grape::API
   end
 
   post "/message/new" do 
-    user  = logged_in user
+    user  = logged_in User
     a = Conversation.where(user_1: user.id, user_2: params[:user_id]).first
 
     b = Conversation.where(user_2: user.id, user_1: params[:user_id]).first
