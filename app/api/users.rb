@@ -73,12 +73,13 @@ class Users < Grape::API
     user1 = User.find(params[:user_id])
     user2 = logged_in User
     a = Conversation.where(user_1: user1.id, user_2: user2.id).first
-
     b = Conversation.where(user_2: user1.id, user_1: user2.id).first
     if a
       c = a
-    else
+    elsif b
       c =b
+    else
+      
     end
     if c 
       if c.user_1 == user1.id
