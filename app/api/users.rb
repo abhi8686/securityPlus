@@ -21,7 +21,7 @@ class Users < Grape::API
     if user.valid?
        user.save
        GlobalKey.create(public_key: params[:public_key] , user_id: user.id)
-      { message: "registered user" }
+      { message: "registered user" , user: user}
     else
       error_builder user.errors.full_messages,500
     end
