@@ -1,3 +1,3 @@
 class GlobalKey < ActiveRecord::Base
-  belongs_To :user
+  belongs_to :user
 end
