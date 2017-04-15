@@ -923,3 +923,11 @@ Started GET "/api/user/all" for 127.0.0.1 at 2017-04-14 20:58:23 +0530
 Started GET "/api/user/all" for 127.0.0.1 at 2017-04-14 20:58:34 +0530
   [1m[35mUser Load (0.7ms)[0m  SELECT "users".* FROM "users"
   [1m[36mGlobalKey Load (0.7ms)[0m  [1mSELECT  "global_keys".* FROM "global_keys" WHERE "global_keys"."user_id" = $1 LIMIT 1[0m  [["user_id", 1]]
+  [1m[36mUser Load (140.6ms)[0m  [1mSELECT "users".* FROM "users"[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (29.0ms)[0m  [1mDELETE FROM "users" WHERE "users"."id" = $1[0m  [["id", 1]]
+  [1m[35m (54.6ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  DELETE FROM "users" WHERE "users"."id" = $1  [["id", 2]]
+  [1m[36m (23.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mGlobalKey Load (35.6ms)[0m  SELECT "global_keys".* FROM "global_keys"

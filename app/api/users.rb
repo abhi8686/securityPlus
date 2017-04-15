@@ -95,7 +95,7 @@ class Users < Grape::API
   desc "get all registered_users"
   get "/all" do 
     # user = logged_in user
-    users = User.all
+    users = User.where.not(id: current_user.id)
     data = {}
     users.map{|x| data[x.id] = {id: x.id, email: x.email, full_name: x.full_name}}
     {message: "list of all users", users: data}
