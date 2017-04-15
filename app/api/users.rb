@@ -37,6 +37,7 @@ class Users < Grape::API
     if  user.valid_password?(params[:password])
       ApplicationHelper::create_jwt_token(user)
       user.update_attribute(:jwt_token, user.jwt_token)
+      # binding.pry
       { :key => user.jwt_token }
     else
       error_builder 'Please enter valid credentials', 500
@@ -48,8 +49,7 @@ class Users < Grape::API
   post "logout" do
     user = logged_in User
     user.update_attribute(:jwt_token,nil)
-    user.update_attribute(:device_token,nil)
-    user.update_attribute(:online, false)
+    # binding.pry
     { message: "Successfully Logged Out "}
   end
 
@@ -60,6 +60,7 @@ class Users < Grape::API
     requires :public_key, allow_blank: :false, type: String
   end
   post "public_key" do
+    # binding.pry
     user1 = User.find(params[:user_id])
     user2 = logged_in User
     a = Conversation.where(user_1: user1.id, user_2: user2.id).first
@@ -88,6 +89,7 @@ class Users < Grape::API
 
   desc "user messages"
   get "/messages/check" do 
+    # binding.pry
     user = logged_in User
     messages = Message.where(recevier_id: user.id, seen: false)
     messages.map{|x| x.seen = true; x.save}
@@ -99,6 +101,7 @@ class Users < Grape::API
     requires :user_id, allow_blank: :false, type:String
   end
   post "/user_profile" do 
+    # binding.pry
     user1 = User.find(params[:user_id])
     user2 = logged_in User
     a = Conversation.where(user_1: user1.id, user_2: user2.id).first
@@ -124,6 +127,7 @@ class Users < Grape::API
 
   desc "get all registered_users"
   get "/all" do 
+    # binding.pry
     user = logged_in User
     users = User.where.not(id: user.id)
     data = {}
@@ -138,9 +142,9 @@ class Users < Grape::API
   end
 
   post "/message/new" do 
+    # binding.pry
     user  = logged_in User
     a = Conversation.where(user_1: user.id, user_2: params[:user_id]).first
-
     b = Conversation.where(user_2: user.id, user_1: params[:user_id]).first
     if a
       c = a
