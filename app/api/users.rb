@@ -121,7 +121,7 @@ class Users < Grape::API
     end
     if c 
     else
-      a = Conversation.create(user_1: user.id, user_2: params[:user_id])
+      c = Conversation.create(user_1: user.id, user_2: params[:user_id])
     end
     Message.create(sender_id: user.id, recevier_id: params[:user_id], content: params[:content], conversation_id: c.id)
     {message: "message created"}
