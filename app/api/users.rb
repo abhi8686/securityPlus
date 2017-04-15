@@ -74,14 +74,16 @@ class Users < Grape::API
       if c.user_1 == user1.id
         c.user_1_public = params[:public_key]
         c.save
-      else
+      elsif c.user_2 == user1.id
         c.user_2_public = params[:public_key]
         c.save
+      else
+
       end
     else
       c = Conversation.create(user_1: user1.id, user_2: user2.id, user_2_public: params[:public_key], user_1_public: user1.global_key.public_key)
     end
-    {messages: "updated conversation" }
+    {messages: "updated conversation"}
   end
 
 
