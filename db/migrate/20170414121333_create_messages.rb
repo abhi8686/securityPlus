@@ -5,7 +5,7 @@ class CreateMessages < ActiveRecord::Migration
       t.string :content
       t.string :sender_id
       t.string :recevier_id
-      t.boolean :seen
+      t.boolean :seen, default: :false
       t.timestamps null: false
     end
   end
